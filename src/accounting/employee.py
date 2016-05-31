@@ -1,11 +1,10 @@
-class SalariedEmployee:
+class Employee:
 
-    def __init__(self, emp_id, fname, lname, sal, comm_rate, dues):
+    def __init__(self, emp_id, fname, lname, hrly_rt, dues):
         self.__employee_id = emp_id
         self.__first_name = fname
         self.__last_name = lname
-        self.__salary = float(sal)
-        self.__commission_rate = float(comm_rate)
+        self.__hourly_rate = float(hrly_rt)
         self.__weekly_dues = float(dues)
 
     def get_full_name(self):
