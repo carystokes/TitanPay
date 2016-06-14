@@ -24,3 +24,9 @@ class TimeCard:
         pay = (reg_min / 60) * rate + (ot_min / 60) * rate * 1.5
 
         return pay
+
+    def get_date(self):
+        return self.__date
+
+    def set_end_time(self, end_time):
+        __end_time = end_time
