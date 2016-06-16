@@ -1,10 +1,12 @@
 from src.accounting.bankaccount import BankAccount
 from src.accounting.paymentmethod import PaymentMethod
 
+
 class DirectDepositPayment(PaymentMethod):
-    def __init__(self, pay_method, pay):
+    def __init__(self, pay):
+        PaymentMethod.__init__(self)
         self.pay = pay
 
-    def pay(self, pay_method, pay):
-        output = BankAccount.deposit(self, pay)
+    def pay(self):
+        output = BankAccount.deposit(self, self.pay)
         return output

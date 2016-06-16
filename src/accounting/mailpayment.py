@@ -1,7 +1,8 @@
 from src.accounting.paymentmethod import PaymentMethod
 
 class MailPayment(PaymentMethod):
-    def __init__(self, pay, pay_method, address):
+    def __init__(self, pay, address):
+        PaymentMethod.__init__(self)
         self.__pay = pay
         self.__address = address
 
