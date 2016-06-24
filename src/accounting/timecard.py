@@ -5,13 +5,15 @@ class TimeCard:
         self.__start_time = st_time
         self.__end_time = end_time
 
-    def calculate_daily_pay(self, rate):
-        import time
-        # assuming time in HHMM format
-        time_start = time.mktime(time.strptime("2016" + self.__start_time, "%Y%H%M"))
-        time_end = time.mktime(time.strptime("2016" + self.__end_time, "%Y%H%M"))
+    def get_tcdate(self):
+        return self.__date
 
-        minutes = (int(time_end - time_start) / 60)
+    def calculate_daily_pay(self, rate_str):
+        rate = float(rate_str)
+        end_minutes = (int(self.__end_time) // 100) * 60 + (int(self.__end_time) - (int(self.__end_time) // 100)*100)
+        start_minutes = (int(self.__start_time) // 100) * 60 + (int(self.__start_time) - (int(self.__start_time) // 100)*100)
+
+        minutes = end_minutes - start_minutes
 
         if minutes > 480:
             reg_min = 480
@@ -29,4 +31,4 @@ class TimeCard:
         return self.__date
 
     def set_end_time(self, end_time):
-        __end_time = end_time
+        self.__end_time = end_time

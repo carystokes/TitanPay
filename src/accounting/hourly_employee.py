@@ -1,60 +1,54 @@
 from src.accounting.employee import Employee
 from src.accounting.timecard import TimeCard
-from src.accounting.address import Address
 from src.accounting.mailpayment import MailPayment
 from src.accounting.pickuppayment import PickUpPayment
 from src.accounting.directdepositpayment import DirectDepositPayment
-import datetime
+from src.accounting.address import Address
 
 
 class HourlyEmployee(Employee):
 
-    def __init__(self, emp_id, fname, lname, hrly_rt, dues, pay_method):
-        Employee.__init__(self, emp_id, fname, lname, dues, pay_method)
+    def __init__(self, emp_id, lname, fname, hrly_rt, dues, pay_method, st_address, city, state, zip_code):
+        Employee.__init__(self, emp_id, lname, fname, dues, pay_method, st_address, city, state, zip_code)
         self.__hourly_rate = hrly_rt
         self.__timeCards = []
-        self.address = Address.get_address(self)
 
-    def clockin(self):
-        timecard_date, st_time = self.get_time()
+    def clockin(self, timecard_date, st_time):
         end_time = ""
         tcard = TimeCard(timecard_date, st_time, end_time)
         self.__timeCards.append(tcard)
 
-    def clockout(self):
-        timecard_date, end_time = self.get_time()
-        for i in self.timeCards:
-            if i[0] == timecard_date:
-                self.__timeCards[i].set_end_time(self, end_time)
-
-    def get_time(self):
-        now = datetime.datetime.now()
-        nowstr = str(now)
-        date = nowstr[0:9]
-        time = nowstr[11:13] + nowstr[14:16]
-        return date, time
+    def clockout(self, timecard_date, end_time):
+        for i in self.__timeCards:
+            if i.get_date() == timecard_date:
+                i.set_end_time(end_time)
 
     def calc_pay(self):
 
-        pay = 0
-        for k in self.__timeCards:
-            tcard = self.__timeCards[k]
-            pay += tcard.calculate_daily_pay(self)
+        pay_total = 0
+        for tcard in self.__timeCards:
+            pay_total += tcard.calculate_daily_pay(self.__hourly_rate)
 
-        dues = Employee.get_dues(self)
-        pay -= dues
+        if pay_total > 0:
+            dues = float(Employee.get_dues(self))
+            pay_total -= dues
+            self.payment(pay_total)
 
-        pay(self, pay)
+    def payment(self, pay_total):
 
-    def pay(self, pay):
-        if self.__pay_method == 0:
-            output = MailPayment.pay(pay, self.address)
+        full_name = Employee.get_full_name(self)
+        if Employee.get_pay_method(self) == 'MA':
+            full_address = Employee.get_full_address(self)
+            mpayment = MailPayment(pay_total, full_name, full_address)
+            output = mpayment.get_output()
 
-        elif self.__pay_method == 1:
-            output = PickUpPayment.pay(pay)
+        elif Employee.get_pay_method(self) == 'PU':
+            ppayment = PickUpPayment(pay_total, full_name)
+            output = ppayment.get_output()
 
         else:
-            output = DirectDepositPayment.pay(pay)
+            dpayment = DirectDepositPayment(pay_total, full_name)
+            output = dpayment.get_output()
 
         print(output)
 

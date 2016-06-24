@@ -8,8 +8,8 @@ import datetime
 
 class SalariedEmployee(Employee):
 
-    def __init__(self, emp_id, fname, lname, sal, comm_rate, dues, pay_method):
-        Employee.__init__(self, emp_id, fname, lname, dues, pay_method)
+    def __init__(self, emp_id, fname, lname, sal, comm_rate, dues, pay_method, st_address, city, state, zip):
+        Employee.__init__(self, emp_id, fname, lname, dues, pay_method, st_address, city, state, zip)
 
         self.__salary = sal
         self.__commission_rate = comm_rate
@@ -23,24 +23,24 @@ class SalariedEmployee(Employee):
         self.__receipts.append(receipt)
 
     def pay(self):
-        pay = 0
+        pay_amt = 0
         for i in self.__receipts:
-            pay += i[1] * self.__commission_rate
+            pay_amt += i[1] * self.__commission_rate
 
-        pay += self.__salary / 12
+        pay_amt += self.__salary / 12
         dues = Employee.get_dues(self)
-        pay -= dues
+        pay_amt -= dues
 
-        pay(self, pay)
+        self.payment(pay_amt)
 
-    def pay(self, pay):
-        if self.__pay_method == 0:
-            output = MailPayment.pay(pay, self.address)
+    def payment(self, pay_amt):
+        if self.__pay_method == 'MP':
+            output = MailPayment.pay(pay_amt, self.address)
 
-        elif self.__pay_method == 1:
-            output = PickUpPayment.pay(pay)
+        elif self.__pay_method == 'PU':
+            output = PickUpPayment.pay(pay_amt)
 
         else:
-            output = DirectDepositPayment.pay(pay)
+            output = DirectDepositPayment.pay(pay_amt)
 
         print(output)
