@@ -1,5 +1,6 @@
 
 from src.accounting import hourly_employee
+from src.accounting import salaried_employee
 
 def run_payroll():
     hr_emp_hand = open('hourly_employees.csv', 'r')
@@ -38,3 +39,51 @@ def run_payroll():
     for emp in hr_employee_dict:
         hr_employee_dict[emp].calc_pay()
 
+    sal_emp_hand = open('salaried_employees.csv', 'r')
+    count = 0
+    sal_employee_dict = {}
+    for line in sal_emp_hand:
+
+        if count != 0:
+            emp = line.split(',')
+            emp[5] = emp[5].strip()
+            emp[6] = emp[6].strip()
+            if emp[5] == '-':
+                emp[5] = 0
+            employee = salaried_employee.SalariedEmployee(emp[0], emp[1], emp[2], emp[3], emp[4], emp[5], emp[6], '25 Waterview Dr',
+                                                      'Westford', 'MA', '01886')
+            sal_employee_dict[emp[0]] = employee
+
+        count += 1
+
+    sal_emp_hand.close()
+
+    rec_hand = open('receipts.csv', 'r')
+    count = 0
+    for line in rec_hand:
+
+        if count != 0:
+            comma_count = 0
+            line2 = ''
+            for cha in range(0, len(line)):
+                if line[cha] == ',':
+                    comma_count += 1
+                    if comma_count > 5:
+                        continue
+                    else:
+                        line2 = line2 + ','
+                else:
+                    line2 = line2 + line[cha]
+
+            rec_data = line2.split(',')
+            total = rec_data[5].strip()
+            total = total.strip('"')
+            total = total.strip()
+            totalf = float(total)
+            sal_employee_dict[rec_data[0]].create_receipt(rec_data[0], rec_data[1], rec_data[2], int(rec_data[3]), float(rec_data[4]),
+                              totalf)
+        count += 1
+    rec_hand.close()
+
+    for emp in sal_employee_dict:
+        sal_employee_dict[emp].calc_pay()

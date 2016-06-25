@@ -1,46 +1,49 @@
 from src.accounting.employee import Employee
 from src.accounting.receipt import Receipt
-from src.accounting.address import Address
 from src.accounting.mailpayment import MailPayment
 from src.accounting.pickuppayment import PickUpPayment
 from src.accounting.directdepositpayment import DirectDepositPayment
-import datetime
+
 
 class SalariedEmployee(Employee):
 
-    def __init__(self, emp_id, fname, lname, sal, comm_rate, dues, pay_method, st_address, city, state, zip):
-        Employee.__init__(self, emp_id, fname, lname, dues, pay_method, st_address, city, state, zip)
+    def __init__(self, emp_id, lname, fname, sal, comm_rate, dues, pay_method, st_address, city, state, zip):
+        Employee.__init__(self, emp_id, lname, fname, dues, pay_method, st_address, city, state, zip)
 
-        self.__salary = sal
-        self.__commission_rate = comm_rate
+        self.__salary = float(sal)
+        self.__commission_rate = float(comm_rate) / 100
         self.__receipts = []
 
-    def makesale(self, amt):
-        now = datetime.datetime.now()
-        nowstr = str(now)
-        rec_date = nowstr[0:10]
-        receipt = Receipt(rec_date, amt)
+    def create_receipt(self, emp_id, lname, item, units, unit_cost, total):
+        receipt = Receipt(emp_id, lname, item, units, unit_cost, total)
         self.__receipts.append(receipt)
+        return
 
-    def pay(self):
+    def calc_pay(self):
         pay_amt = 0
         for i in self.__receipts:
-            pay_amt += i[1] * self.__commission_rate
+            pay_amt += i.get_pay_data() * self.__commission_rate
 
         pay_amt += self.__salary / 12
         dues = Employee.get_dues(self)
-        pay_amt -= dues
+        pay_amt -= float(dues)
 
         self.payment(pay_amt)
 
-    def payment(self, pay_amt):
-        if self.__pay_method == 'MP':
-            output = MailPayment.pay(pay_amt, self.address)
+    def payment(self, pay_total):
+        full_name = Employee.get_full_name(self)
+        if Employee.get_pay_method(self) == 'MA':
+            full_address = Employee.get_full_address(self)
+            mpayment = MailPayment(pay_total, full_name, full_address)
+            output = mpayment.get_output()
 
-        elif self.__pay_method == 'PU':
-            output = PickUpPayment.pay(pay_amt)
+        elif Employee.get_pay_method(self) == 'PU':
+            ppayment = PickUpPayment(pay_total, full_name)
+            output = ppayment.get_output()
 
         else:
-            output = DirectDepositPayment.pay(pay_amt)
+            dpayment = DirectDepositPayment(pay_total, full_name)
+            output = dpayment.get_output()
 
         print(output)
+

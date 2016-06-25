@@ -3,7 +3,6 @@ from src.accounting.timecard import TimeCard
 from src.accounting.mailpayment import MailPayment
 from src.accounting.pickuppayment import PickUpPayment
 from src.accounting.directdepositpayment import DirectDepositPayment
-from src.accounting.address import Address
 
 
 class HourlyEmployee(Employee):
@@ -35,7 +34,6 @@ class HourlyEmployee(Employee):
             self.payment(pay_total)
 
     def payment(self, pay_total):
-
         full_name = Employee.get_full_name(self)
         if Employee.get_pay_method(self) == 'MA':
             full_address = Employee.get_full_address(self)
