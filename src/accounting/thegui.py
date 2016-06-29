@@ -37,11 +37,12 @@ class TopGUI:
     def process_payroll_gui(self):
         self.additional_window = tkinter.Toplevel()
         self.additional_window.geometry('300x250+500+200')
-
         self.run_payroll_button = tkinter.Button(self.additional_window, width='25', bg='white', text='Run payroll',
                                                  command=runpayroll.run_payroll)
         self.run_payroll_button.pack()
         self.run_payroll_button.place(x=60, y=80)
 
 
-topgui = TopGUI()
+
+
+top_gui = TopGUI()

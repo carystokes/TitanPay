@@ -28,22 +28,19 @@ class SalariedEmployee(Employee):
         dues = Employee.get_dues(self)
         pay_amt -= float(dues)
 
-        self.payment(pay_amt)
-
-    def payment(self, pay_total):
         full_name = Employee.get_full_name(self)
         if Employee.get_pay_method(self) == 'MA':
             full_address = Employee.get_full_address(self)
-            mpayment = MailPayment(pay_total, full_name, full_address)
+            mpayment = MailPayment(pay_amt, full_name, full_address)
             output = mpayment.get_output()
 
         elif Employee.get_pay_method(self) == 'PU':
-            ppayment = PickUpPayment(pay_total, full_name)
+            ppayment = PickUpPayment(pay_amt, full_name)
             output = ppayment.get_output()
 
         else:
-            dpayment = DirectDepositPayment(pay_total, full_name)
+            dpayment = DirectDepositPayment(pay_amt, full_name)
             output = dpayment.get_output()
 
-        print(output)
+        return output
 

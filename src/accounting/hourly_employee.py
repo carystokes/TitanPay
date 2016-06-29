@@ -31,9 +31,9 @@ class HourlyEmployee(Employee):
         if pay_total > 0:
             dues = float(Employee.get_dues(self))
             pay_total -= dues
-            self.payment(pay_total)
+        else:
+            return -1
 
-    def payment(self, pay_total):
         full_name = Employee.get_full_name(self)
         if Employee.get_pay_method(self) == 'MA':
             full_address = Employee.get_full_address(self)
@@ -48,6 +48,6 @@ class HourlyEmployee(Employee):
             dpayment = DirectDepositPayment(pay_total, full_name)
             output = dpayment.get_output()
 
-        print(output)
+        return output
 
 

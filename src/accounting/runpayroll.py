@@ -1,6 +1,22 @@
-
+import tkinter
 from src.accounting import hourly_employee
 from src.accounting import salaried_employee
+
+class PayoutGUI:
+    def __init__(self, pay_actions):
+        self.pay_actions = pay_actions
+        self.main_window = tkinter.Tk()
+        self.main_window.geometry('800x300')
+
+        self.labelspace = tkinter.Label(self.main_window, text='')
+        self.label = tkinter.Label(self.main_window, justify='left', text=self.pay_actions)
+        self.labelspace2 = tkinter.Label(self.main_window, text='')
+
+        self.labelspace.pack()
+        self.label.pack()
+        self.labelspace2.pack()
+
+        tkinter.mainloop()
 
 def run_payroll():
     hr_emp_hand = open('hourly_employees.csv', 'r')
@@ -36,8 +52,14 @@ def run_payroll():
 
     tc_hand.close()
 
+    label = ''
     for emp in hr_employee_dict:
-        hr_employee_dict[emp].calc_pay()
+        check_pay = hr_employee_dict[emp].calc_pay()
+        if check_pay == -1:
+            continue
+        else:
+            label += check_pay + "\n"
+
 
     sal_emp_hand = open('salaried_employees.csv', 'r')
     count = 0
@@ -86,4 +108,6 @@ def run_payroll():
     rec_hand.close()
 
     for emp in sal_employee_dict:
-        sal_employee_dict[emp].calc_pay()
+        label += (sal_employee_dict[emp].calc_pay() + "\n")
+
+    payout_gui = PayoutGUI(label)
