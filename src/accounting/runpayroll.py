@@ -80,5 +80,3 @@ def run_payroll():
         label += (sal_employee_dict[emp].calc_pay() + "\n")
 
     payout_gui = PayoutGUI(label)
-
-run_payroll()

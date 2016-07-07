@@ -19,6 +19,9 @@ class SalariedEmployee(Employee):
         self.__receipts.append(receipt)
         return
 
+    def get_number_receipts(self):
+        return len(self.__receipts)
+
     def calc_pay(self):
         pay_amt = 0
         for i in self.__receipts:

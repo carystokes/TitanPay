@@ -17,10 +17,16 @@ class HourlyEmployee(Employee):
         tcard = TimeCard(timecard_date, st_time, end_time)
         self.__timeCards.append(tcard)
 
+    def get_timeCard_length(self):
+        return len(self.__timeCards)
+
     def clockout(self, timecard_date, end_time):
         for i in self.__timeCards:
-            if i.get_date() == timecard_date:
+            if i.get_tcdate() == timecard_date:
                 i.set_end_time(end_time)
+
+    def get_timeCard_end_time(self):
+        return self.__timeCards[0].end_time
 
     def calc_pay(self):
 
