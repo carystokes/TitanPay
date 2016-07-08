@@ -48,4 +48,3 @@ def import_employees():
     conn.close()
 
 
-import_employees()

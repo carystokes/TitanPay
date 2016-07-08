@@ -37,4 +37,3 @@ def import_receipts():
     conn.commit()
     conn.close()
 
-import_receipts()
