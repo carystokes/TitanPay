@@ -25,7 +25,7 @@ class TopGUI:
         self.import_timecards_button = tkinter.Button(self.frame, width='25', bg='white', text='Import timecards', command=timecard_db.import_timecards)
         self.import_receipts_button = tkinter.Button(self.frame, width='25', bg='white', text='Import receipts', command=receipts_db.import_receipts)
         self.process_payroll_button = tkinter.Button(self.frame, width='25', bg='white', text='Process payroll',
-                                                     command=self.process_payroll_gui)
+                                                     command=runpayroll.run_payroll)
 
         self.frame.pack()
         self.labelspace.pack()
@@ -42,16 +42,5 @@ class TopGUI:
         self.process_payroll_button.pack()
 
         tkinter.mainloop()
-
-    def process_payroll_gui(self):
-        self.additional_window = tkinter.Toplevel()
-        self.additional_window.geometry('300x325+500+200')
-        self.run_payroll_button = tkinter.Button(self.additional_window, width='25', bg='white', text='Run payroll',
-                                                 command=runpayroll.run_payroll)
-        self.run_payroll_button.pack()
-        self.run_payroll_button.place(x=60, y=80)
-
-
-
 
 top_gui = TopGUI()
